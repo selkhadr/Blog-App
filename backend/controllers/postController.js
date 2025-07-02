@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const {Post,validateCreatePost, validateUpdatePost} = require("../models/Posts");
 const {cloudinaryUploadImage, cloudinaryRemoveImage}=require("../utils/cloudinary");
 const { json } = require("stream/consumers");
+const { response } = require("express");
  
 /**
  *@desc create new post
@@ -164,9 +165,37 @@ module.exports.updatePostImageCtrl = asyncHandler(async(req,res)=>{
             publicId:result.public_id,
         }
     }
-    }, {new:true}).populate("user", ["-password"])
+    }, {new:true});
 
     
     res.status(200).json(updatedPost);
     fs.unlinkSync(imagePath);
+});
+
+/**
+ *@desc toggle like
+ * @router /api/posts/like/:id
+ * @method put
+ * @access private (only logged in user)
+ */
+module.exports.toggleLikeCtrl = asyncHandler(async(req,res)=>{
+    
+    let post = await Post.findById(req.params.id);
+    if(!post){
+        return res.status(404).json({message:"post not found"});
+    }
+    const isPostAlreadyLiked = post.likes.find((user)=>user.toString()===req.user.id);
+
+    if(isPostAlreadyLiked){
+        post = await Post.findByIdAndUpdate(req.params.id,{
+            $pull:{likes:req.user.id}
+        }, {new:true});
+    }
+    else{
+        post = await Post.findByIdAndUpdate(req.params.id,{
+        $push:{likes:req.user.id}
+        }, {new:true});
+
+    }
+    return res.status(200).json({post,likes: post.likes});
 });
