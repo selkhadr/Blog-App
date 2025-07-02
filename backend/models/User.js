@@ -48,7 +48,7 @@ UserSchema.methods.generateAuthToken = function(){
     return jwt.sign({id: this._id, isAdmin: this.isAdmin}, process.env.JWT_SECRET);
 }
 
-const User = mongoose.model("user", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
 function validateRegisterUser(obj){
     const schema = joi.object({
