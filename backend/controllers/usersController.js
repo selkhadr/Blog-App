@@ -12,18 +12,18 @@ const fs= require("fs");
  * @access private (only admin)
  */
 module.exports.getAllUsersCtrl = asyncHandler(async(req, res)=>{
-    const users = await User.find().select("-password");
+    const users = await User.find().select("-password").populate("posts");
     res.status(200).json(users);
 })
 
 /**
- *@desc get user profits
+ *@desc get user profile
  * @router /api/users/profile/:id
  * @method get
  * @access public
  */
 module.exports.getUserProfileCtrl = asyncHandler(async(req, res)=>{
-    const user = await User.findById(req.params.id).select("-password");
+    const user = await User.findById(req.params.id).select("-password").populate("posts");
     if(!user){
         return res.status(404).json({message: "user not found"});
     }
