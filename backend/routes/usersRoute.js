@@ -12,7 +12,6 @@ router.route("/profile/:id")
     .get(validateObjectId, getUserProfileCtrl)
     .put(validateObjectId, verifyTokenAndOnlyUser, updateUserProfileCtrl);
 
-
 //api/users/profile/profile-photo-upload
 router.route("/profile/profile-photo-upload")
 .post(verifyToken, photoUpload.single("image"),profilePhotoUploadCtrl);
