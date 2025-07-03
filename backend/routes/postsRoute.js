@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const photoUpload = require("../middlewares/photoUpload");
 const {verifyToken}=require("../middlewares/verifyToken");
-const {createPostCtr, getAllPostsCtrl, getSinglePostCtrl, getPostCountCtrl, deletePostCtrl, updatePostCtrl, updatePostImageCtrl, toggleLikeCtrl}=require("../controllers/postController");
+const {createPostCtr, getAllPostsCtrl, getSinglePostCtrl, getPostCountCtrl, deletePostCtrl, updatePostCtrl, updatePostImageCtrl, toggleLikeCtrl}=require("../controllers/postsController");
 const validateObjectId = require("../middlewares/validateObjectId");
 router.route("/")
     .post(verifyToken, photoUpload.single("image"),createPostCtr)
