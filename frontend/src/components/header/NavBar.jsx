@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 const NavBar = ({toggle, setToggle}) => {
   return (
     <nav
@@ -5,18 +7,18 @@ const NavBar = ({toggle, setToggle}) => {
       className="navbar"
     >
       <ul className="nav-links">
-        <li onClick={() => setToggle(false)} className="nav-link">
+        <Link to="/" onClick={() => setToggle(false)} className="nav-link">
           <i className="bi bi-house"></i>Home
-        </li>
-        <li onClick={() => setToggle(false)} className="nav-link">
+        </Link>
+        <Link to="/posts" onClick={() => setToggle(false)} className="nav-link">
           <i className="bi bi-stickies"></i>Posts
-        </li>
-        <li onClick={() => setToggle(false)} className="nav-link">
+        </Link>
+        <Link to="/posts/create-post" onClick={() => setToggle(false)} className="nav-link">
           <i className="bi bi-journal-plus"></i>create
-        </li>
-        <li onClick={() => setToggle(false)} className="nav-link">
+        </Link>
+        <Link to="/admin-dashboard" onClick={() => setToggle(false)} className="nav-link">
           <i className="bi bi-person-check"></i>Admin Dashboard
-        </li>
+        </Link>
       </ul>
     </nav>
   );
