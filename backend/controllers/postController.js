@@ -5,7 +5,8 @@ const {Post,validateCreatePost, validateUpdatePost} = require("../models/Posts")
 const {cloudinaryUploadImage, cloudinaryRemoveImage}=require("../utils/cloudinary");
 const { json } = require("stream/consumers");
 const { response } = require("express");
- 
+const {Comment}=require("../models/comment");
+
 /**
  *@desc create new post
  * @router /api/posts
@@ -103,6 +104,8 @@ module.exports.deletePostCtrl = asyncHandler(async(req,res)=>{
     if(req.user.isAdmin || req.user.id === post.user.toString()){
         await Post.findByIdAndDelete(req.params.id);
         await cloudinaryRemoveImage(post.image.publicId);
+
+        await Comment.deleteMany({postId:post._id});
 
         res.status(200).json({message: "post has been deleted successfully", postId:post._id});
     }else{

@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const {User, validateRegisterUser, validateLoginUser} = require("../models/User");
 
+
 /**
  *@desc register new user
  * @router /api/auth/register

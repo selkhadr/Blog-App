@@ -2,8 +2,11 @@ const asyncHandler = require("express-async-handler");
 const {User, validateUpdateUser} = require("../models/User");
 const bcrypt = require("bcryptjs");
 const path = require("path");
-const {cloudinaryUploadImage, cloudinaryRemoveImage}=require("../utils/cloudinary")
+const {cloudinaryUploadImage, cloudinaryRemoveImage, cloudinaryRemoveMultipleImage}=require("../utils/cloudinary")
 const fs= require("fs");
+const{Comment}=require("../models/comment");
+const{Post}=require("../models/Posts");
+
 
 /**
  *@desc get all users profits
@@ -121,7 +124,14 @@ module.exports.deleteUserProfileCtrl = asyncHandler(async(req,res)=>{
     if(!user){
         return res.status(404).json({message: "user not found"});
     }
+    const posts = await Post.find({user:user._id});
+    const publicIds = posts?.map((post)=>post.image.publicId);
+    if(publicIds?.length > 0){
+        await cloudinaryRemoveMultipleImage(publicIds);
+    }
     await cloudinaryRemoveImage(user.profilePhoto.publicId);
+    await Post.deleteMany({user:user._id});
+    await Comment.deleteMany({user:user._id});
     await User.findByIdAndDelete(req.params.id);
     res.status(200).json({message: "your profile has been deleted"});
 });
